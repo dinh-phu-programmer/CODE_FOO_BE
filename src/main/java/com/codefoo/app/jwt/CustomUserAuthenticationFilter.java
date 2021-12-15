@@ -20,7 +20,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 import com.codefoo.app.model.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,8 +44,16 @@ public class CustomUserAuthenticationFilter extends UsernamePasswordAuthenticati
 		try {
 
 			User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(),
-					user.getPassword());
+
+			Authentication authentication = null;
+			if (user.getEmail() != null) {
+				authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+			}
+
+			if (user.getUsername() != null) {
+				authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+			}
+
 			Authentication authenticate = this.authenticationManager.authenticate(authentication);
 			return authenticate;
 		} catch (IOException e) {

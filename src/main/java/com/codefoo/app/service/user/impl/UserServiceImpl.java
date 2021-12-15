@@ -40,23 +40,18 @@ public class UserServiceImpl extends CommonAction<User, Integer, UserRepository>
 		User userEmail = this.jpaRepository.findByEmail(data);
 		User userUserName = this.jpaRepository.findByUsername(data);
 		UserPrincipal userPrincipal = null;
-		boolean findUser = true;
+
 		if (userEmail != null) {
 
 			userPrincipal = setUserByUserNameOrEmail(userEmail);
-		} else {
-			findUser = false;
 		}
 
 		if (userUserName != null) {
 
 			userPrincipal = setUserByUserNameOrEmail(userUserName);
-		} else {
-			findUser = false;
 		}
-
-		if (!findUser) {
-			throw new UsernameNotFoundException(USER_NOT_FOUND_BY_ID + ": email");
+		if (userEmail == null && userUserName == null) {
+			throw new UsernameNotFoundException(USER_NOT_FOUND_BY_ID + ": email or username");
 		}
 
 		return userPrincipal;
