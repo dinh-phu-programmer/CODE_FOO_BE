@@ -1,8 +1,8 @@
 package com.codefoo.app.model.rootclass;
 
 public abstract class RootClass {
-	public static final String classType="rootclass";
-	
+	public static final String classType = "";
+
 	protected Integer id;
 
 	public Integer getId() {

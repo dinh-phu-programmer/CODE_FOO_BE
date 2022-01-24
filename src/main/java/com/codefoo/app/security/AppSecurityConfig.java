@@ -71,5 +71,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().accessDeniedHandler(this.jwtAccessDeniedHandler)
 				.authenticationEntryPoint(this.jwtAuthenticationEntryPoint);
 	}
+	
+	
 
 }

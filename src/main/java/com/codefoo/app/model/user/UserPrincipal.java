@@ -23,6 +23,7 @@ public class UserPrincipal implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<SimpleGrantedAuthority> permissions = Arrays.stream(this.user.getAuthorities())
 				.map(per -> new SimpleGrantedAuthority(per)).collect(Collectors.toSet());
+		permissions.add(new SimpleGrantedAuthority("ROLE_" + this.user.getRole()));
 		return permissions;
 	}
 

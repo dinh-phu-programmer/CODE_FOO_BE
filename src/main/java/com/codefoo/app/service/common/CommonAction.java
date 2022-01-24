@@ -2,6 +2,7 @@ package com.codefoo.app.service.common;
 
 import static com.codefoo.app.constant.ExceptionMessageConstant.OBJECT_NOT_FOUND_EXCEPTION;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,19 +27,20 @@ public abstract class CommonAction<T extends RootClass, ID extends Number, E ext
 		return (T) jpaRepository.save(object);
 	}
 
-	public T update(T object, ID id) throws ObjectNotFoundException {
-		T current = null;
-
-		current = findById(id);
-
-		Integer currentID = current.getId();
-
-		current = object;
-
-		current.setId(currentID);
-
-		return (T) jpaRepository.save(current);
-	}
+	public abstract T update(T object, ID id) throws Exception;
+//	public T update(T object, ID id) throws ObjectNotFoundException {
+//		T current = null;
+//
+//		current = findById(id);
+//
+//		Integer currentID = current.getId();
+//
+//		current = object;
+//
+//		current.setId(currentID);
+//
+//		return (T) jpaRepository.save(current);
+//	}
 
 	public T delete(T object) {
 		this.jpaRepository.delete(object);
