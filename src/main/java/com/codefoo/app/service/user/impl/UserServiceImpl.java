@@ -6,6 +6,7 @@ import static com.codefoo.app.constant.ExceptionMessageConstant.USER_NOT_FOUND_B
 
 import java.time.LocalDateTime;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.codefoo.app.authority.AppUserRole;
 import com.codefoo.app.exception.specific.EmailExistException;
+import com.codefoo.app.exception.specific.ObjectNotFoundException;
 import com.codefoo.app.exception.specific.UserExistException;
 import com.codefoo.app.model.user.User;
 import com.codefoo.app.model.user.UserDTO;
@@ -22,17 +24,18 @@ import com.codefoo.app.model.user.UserPrincipal;
 import com.codefoo.app.repo.user.UserRepository;
 import com.codefoo.app.service.common.CommonAction;
 import com.codefoo.app.service.user.UserService;
-import com.codefoo.app.utils.UserTransferUtils;
 
 @Service("userService")
 public class UserServiceImpl extends CommonAction<User, Integer, UserRepository>
 		implements UserService, UserDetailsService {
 	private PasswordEncoder passwordEncoder;
+	private ModelMapper modelMapper;
 
 	@Autowired
-	public UserServiceImpl(UserRepository jpaRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository jpaRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
 		super(jpaRepository);
 		this.passwordEncoder = passwordEncoder;
+		this.modelMapper = modelMapper;
 	}
 
 	@Override
@@ -75,7 +78,8 @@ public class UserServiceImpl extends CommonAction<User, Integer, UserRepository>
 		userDTO.setRole(AppUserRole.USER.name());
 		userDTO.setAuthorities(AppUserRole.USER.getPermissions());
 		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-		User user = UserTransferUtils.userDtoToUser(userDTO);
+//		User user = UserTransferUtils.userDtoToUser(userDTO);
+		User user = this.modelMapper.map(userDTO, User.class);
 		return super.save(user);
 	}
 
@@ -107,4 +111,18 @@ public class UserServiceImpl extends CommonAction<User, Integer, UserRepository>
 		return this.jpaRepository.findByEmail(email);
 	}
 
+	@Override
+	public User update(User updateUser, Integer id) throws ObjectNotFoundException {
+		User currentUser = null;
+		try {
+			currentUser = this.findById(id);
+		} catch (ObjectNotFoundException e) {
+			
+			throw new ObjectNotFoundException(e.getMessage(), User.classType);
+		}
+
+		currentUser.setFirstName(updateUser.getFirstName());
+		currentUser.setLastName(updateUser.getLastName());
+		return this.save(currentUser);
+	}
 }

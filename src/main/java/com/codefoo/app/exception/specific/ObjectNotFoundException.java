@@ -13,11 +13,11 @@ public class ObjectNotFoundException extends Exception {
 	}
 
 	public ObjectNotFoundException(String s, RootClass customClass) {
-
+		super(customClass + "" + s);
 	}
 
 	public ObjectNotFoundException(String s, String customClass) {
-		super(customClass + " " + s);
+		super(customClass + "" + s);
 
 	}
 }

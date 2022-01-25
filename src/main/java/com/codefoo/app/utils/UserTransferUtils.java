@@ -20,4 +20,5 @@ public class UserTransferUtils {
 		user.setLastLoginDate(userDTO.getLastLoginDate());
 		return user;
 	}
+
 }

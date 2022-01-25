@@ -16,9 +16,15 @@ import com.codefoo.app.response.HttpResponse;
 public class MainExceptionHandler {
 	// Not Found
 	@ExceptionHandler(value = { UserNotFoundException.class, ObjectNotFoundException.class })
-	public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException e) {
+	public ResponseEntity<HttpResponse> userNotFoundException(Exception e) {
 		return createHttpResponse(HttpStatus.NOT_FOUND, e.getMessage());
 	}
+
+//	// Not Found
+//	@ExceptionHandler(value = { ObjectNotFoundException.class })
+//	public ResponseEntity<HttpResponse> objectNotFound(ObjectNotFoundException e) {
+//		return createHttpResponse(HttpStatus.NOT_FOUND, e.getMessage());
+//	}
 
 	// Bad Request
 	@ExceptionHandler(value = { UserFieldValidationException.class, EmailExistException.class,
